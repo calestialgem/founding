@@ -26,6 +26,7 @@ namespace gecgelcem::founding::display
 
 		void        set_hints() const noexcept;
 		GLFWwindow *create(GLFWmonitor *const monitor) const noexcept;
+		void        set_context() const noexcept;
 
 		friend class display;
 	};
@@ -50,6 +51,16 @@ namespace gecgelcem::founding::display
 			return glfwWindowShouldClose(window_);
 		}
 
+		inline bool is_focused() const noexcept
+		{
+			return focused_;
+		}
+
+		inline bool is_iconified() const noexcept
+		{
+			return iconified_;
+		}
+
 		private:
 
 		display() = delete;
@@ -60,9 +71,24 @@ namespace gecgelcem::founding::display
 		display(display &&other) = delete;
 		display &operator=(display &&other) = delete;
 
+		inline void set_callbacks() noexcept
+		{
+			glfwSetWindowUserPointer(window_, this);
+			glfwSetWindowFocusCallback(window_, &on_window_focused);
+			glfwSetWindowIconifyCallback(window_, &on_window_iconified);
+		}
+
+		static void
+		on_window_focused(GLFWwindow *const handle, int const focused);
+		static void
+		on_window_iconified(GLFWwindow *const handle, int const iconified);
+
 		options      options_;
 		GLFWmonitor *monitor_;
 		GLFWwindow  *window_;
+
+		bool focused_   = true;
+		bool iconified_ = false;
 	};
 } // namespace gecgelcem::founding::display
 

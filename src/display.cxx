@@ -5,6 +5,8 @@
 
 #include "GLFW/glfw3.h"
 
+#include <GL/gl.h>
+
 namespace gecgelcem::founding::display
 {
 	void options::set_hints() const noexcept
@@ -32,6 +34,12 @@ namespace gecgelcem::founding::display
 			NULL);
 	}
 
+	void options::set_context() const noexcept
+	{
+		glfwSwapInterval(swapInterval);
+		glViewport(0, 0, width, height);
+	}
+
 	static void init_glfw()
 	{
 		static bool initialized = false;
@@ -57,17 +65,37 @@ namespace gecgelcem::founding::display
 	{
 		init_glfw();
 		monitor_ = glfwGetPrimaryMonitor();
+
 		options_.set_hints();
 		window_ = options_.create(monitor_);
 		if (!window_) {
 			throw std::runtime_error{"Could not create the window!"};
 		}
-		glfwSetWindowUserPointer(window_, this);
+
+		set_callbacks();
+		glfwMakeContextCurrent(window_);
+		options_.set_context();
 	}
 
 	display::~display() noexcept
 	{
 		glfwDestroyWindow(window_);
 		glfwTerminate();
+	}
+
+	static inline display &get_display(GLFWwindow *const handle)
+	{
+		return *static_cast<display *>(glfwGetWindowUserPointer(handle));
+	}
+
+	void display::on_window_focused(GLFWwindow *const handle, int const focused)
+	{
+		get_display(handle).focused_ = focused;
+	}
+
+	void
+	display::on_window_iconified(GLFWwindow *const handle, int const iconified)
+	{
+		get_display(handle).iconified_ = iconified;
 	}
 } // namespace gecgelcem::founding::display

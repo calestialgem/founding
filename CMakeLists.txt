@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
 src/main.cxx
 src/display.hxx
 src/display.cxx
+src/accumulator.hxx
 )
 
 # OpenGL

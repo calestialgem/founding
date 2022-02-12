@@ -9,3 +9,15 @@ project(founding)
 add_executable(${PROJECT_NAME}
 src/main.cxx
 )
+
+# OpenGL
+find_package(OpenGL REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL)
+
+# GLFW
+target_include_directories(${PROJECT_NAME} PUBLIC glfw/include)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)

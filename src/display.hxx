@@ -13,7 +13,7 @@
 
 namespace gecgelcem::founding::display
 {
-	struct options {
+	struct options final {
 		int         width        = 1280;
 		int         height       = 720;
 		std::string title        = std::string{"Mending Engine"};
@@ -31,7 +31,7 @@ namespace gecgelcem::founding::display
 		friend class display;
 	};
 
-	struct display {
+	struct display final {
 		display(struct options options);
 		~display() noexcept;
 

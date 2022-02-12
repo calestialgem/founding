@@ -14,13 +14,13 @@
 namespace gecgelcem::founding::display
 {
 	struct options final {
-		int         width        = 1280;
-		int         height       = 720;
-		std::string title        = std::string{"Mending Engine"};
-		bool        fullscreen   = false;
-		bool        decorated    = true;
-		int         samples      = 16;
-		int         swapInterval = 1;
+		int         width{1280};
+		int         height{720};
+		std::string title{"Founding II"};
+		bool        fullscreen{false};
+		bool        decorated{true};
+		int         samples{16};
+		int         swapInterval{1};
 
 		private:
 
@@ -84,11 +84,10 @@ namespace gecgelcem::founding::display
 		on_window_iconified(GLFWwindow *const handle, int const iconified);
 
 		options      options_;
-		GLFWmonitor *monitor_;
-		GLFWwindow  *window_;
-
-		bool focused_   = true;
-		bool iconified_ = false;
+		GLFWmonitor *monitor_{nullptr};
+		GLFWwindow  *window_{nullptr};
+		bool         focused_{true};
+		bool         iconified_{false};
 	};
 } // namespace gecgelcem::founding::display
 

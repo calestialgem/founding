@@ -54,6 +54,11 @@ namespace gecgelcem::founding
 			running_ = false;
 		}
 
+		constexpr void enable_rendering(bool const rendering) noexcept
+		{
+			rendering_ = rendering;
+		}
+
 		constexpr statistics const &tick_stats() const noexcept
 		{
 			return ticks_snapshot_;

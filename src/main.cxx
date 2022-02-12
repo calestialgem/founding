@@ -14,12 +14,18 @@ int main()
 
 	auto const updater = [&display](engine &engine) {
 		display.update();
+		engine.enable_rendering(display.is_focused());
 		if (display.is_closed()) {
 			engine.close();
 		}
 	};
 
 	auto const renderer = [&display](engine &engine) {
+		glClearColor(
+			display.is_focused(),
+			display.is_iconified(),
+			display.is_closed(),
+			1.0);
 		display.show();
 	};
 
@@ -29,10 +35,4 @@ int main()
 	};
 
 	engine{20.0, updater, renderer, seconder};
-
-	while (!display.is_closed()) {
-		display.update();
-		glClearColor(display.is_focused(), display.is_iconified(), 0.0F, 1.0F);
-		display.show();
-	}
 }

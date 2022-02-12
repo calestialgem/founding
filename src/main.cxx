@@ -6,7 +6,7 @@
 int main()
 {
 	using namespace gecgelcem::founding::display;
-	display display{options{}};
+	display const display{options{}};
 	while (!display.is_closed()) {
 		display.update();
 	}

@@ -45,20 +45,20 @@ namespace gecgelcem::founding::display
 				"Could not initialize the GLFW Window Library!"};
 		}
 
-		glfwSetErrorCallback([](int code, char const *message) {
+		glfwSetErrorCallback([](int const code, char const *const message) {
 			std::stringstream error_text;
 			error_text << "GLFW Error " << std::hex << code << ": " << message;
 			throw std::runtime_error{error_text.str()};
 		});
 	}
 
-	display::display(struct options options)
+	display::display(options const options)
 		: options_{options}
 	{
 		init_glfw();
 		monitor_ = glfwGetPrimaryMonitor();
-		options.set_hints();
-		window_ = options.create(monitor_);
+		options_.set_hints();
+		window_ = options_.create(monitor_);
 		if (!window_) {
 			throw std::runtime_error{"Could not create the window!"};
 		}

@@ -11,6 +11,10 @@ src/main.cxx
 src/display.hxx
 src/display.cxx
 src/accumulator.hxx
+src/timer.hxx
+src/profiler.hxx
+src/statistics.hxx
+src/engine.hxx
 )
 
 # OpenGL

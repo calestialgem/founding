@@ -72,6 +72,13 @@ namespace gecgelcem::founding::display
 			throw std::runtime_error{"Could not create the window!"};
 		}
 
+		GLFWvidmode const *vidmode = glfwGetVideoMode(monitor_);
+		glfwSetWindowPos(
+			window_,
+			(vidmode->width - options_.width) / 2,
+			(vidmode->height - options_.height) / 2);
+		glfwSetCursorPos(window_, options_.width / 2.0, options_.height / 2.0);
+
 		set_callbacks();
 		glfwMakeContextCurrent(window_);
 		options_.set_context();

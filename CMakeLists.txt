@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 project(founding)
 add_executable(${PROJECT_NAME}
 src/main.cxx
+src/display.hxx
+src/display.cxx
 )
 
 # OpenGL

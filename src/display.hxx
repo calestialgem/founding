@@ -31,7 +31,10 @@ namespace gecgelcem::founding::display
 		friend class display;
 	};
 
-	struct display final {
+	class display final
+	{
+		public:
+
 		display(struct options options);
 		~display() noexcept;
 

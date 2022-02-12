@@ -86,7 +86,8 @@ namespace gecgelcem::founding::display
 		static void
 		on_window_iconified(GLFWwindow *const handle, int const iconified);
 
-		options      options_;
+		options const options_;
+
 		GLFWmonitor *monitor_{nullptr};
 		GLFWwindow  *window_{nullptr};
 		bool         focused_{true};

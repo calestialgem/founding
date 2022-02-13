@@ -10,23 +10,36 @@
 #include <memory>
 #include <sstream>
 
+using namespace gecgelcem::founding;
+
+static event::type const DEBUG_EVENT;
+
+struct debug_event : event::base {
+	std::string message;
+
+	debug_event(std::string &&message)
+		: message{std::move(message)}
+	{
+	}
+
+	event::type type() const noexcept override
+	{
+		return DEBUG_EVENT;
+	}
+};
+
 int main()
 {
-	using namespace gecgelcem::founding;
 	display::display const display{display::options{}};
-	event::dispatcher      dispatcher;
 
-	dispatcher.register_listener(
-		event::type::DEBUG,
-		[](event::event const &raw_event) {
-			event::debug_event const &event =
-				static_cast<event::debug_event const &>(raw_event);
-			std::cout << event.message << std::endl;
-		});
+	DEBUG_EVENT.listener([](event::base const &raw_event) {
+		debug_event const &event = static_cast<debug_event const &>(raw_event);
+		std::cout << event.message << std::endl;
+	});
 
-	auto const updater = [&display, &dispatcher](engine &engine) {
+	auto const updater = [&display](engine &engine) {
 		display.update();
-		dispatcher.dispatch_all();
+		event::dispatch();
 		engine.enable_rendering(display.is_focused());
 		if (display.is_closed()) {
 			engine.close();
@@ -42,13 +55,12 @@ int main()
 		display.show();
 	};
 
-	auto const seconder = [&dispatcher](engine &engine) {
+	auto const seconder = [](engine &engine) {
 		std::cout << "Ticks:  " << engine.tick_stats().rate()
 				  << "\nFrames: " << engine.frame_stats().rate() << std::endl;
 		std::stringstream stream;
 		stream << "Debug Message @" << engine.tick_stats().count();
-		dispatcher.dispatch(
-			std::move(std::make_unique<event::debug_event>(stream.str())));
+		event::queue(std::move(std::make_unique<debug_event>(stream.str())));
 	};
 
 	engine{20.0, updater, renderer, seconder};

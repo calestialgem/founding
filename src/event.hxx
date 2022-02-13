@@ -4,69 +4,40 @@
 #ifndef GECGELCEM_FOUNDING_EVENTS_HXX
 #define GECGELCEM_FOUNDING_EVENTS_HXX
 
+#include <cstddef>
 #include <functional>
-#include <map>
 #include <memory>
 #include <queue>
 #include <vector>
 
 namespace gecgelcem::founding::event
 {
-	enum type
-	{
-		DEBUG
-	};
+	class type;
 
-	struct event {
+	struct base {
 		virtual type type() const noexcept = 0;
 	};
 
-	struct debug_event : event {
-		std::string message;
+	void queue(std::unique_ptr<base const> &&event) noexcept;
 
-		debug_event(std::string message)
-			: message(message)
-		{
-		}
+	void dispatch() noexcept;
 
-		enum type type() const noexcept override
-		{
-			return type::DEBUG;
-		}
-	};
-
-	class dispatcher final
+	class type final
 	{
 		public:
 
-		inline void dispatch(std::unique_ptr<event const> &&event) noexcept
-		{
-			queue_.emplace(std::move(event));
-		}
+		type() noexcept;
 
-		inline void register_listener(
-			type                               type,
-			std::function<void(event const &)> listener) noexcept
-		{
-			listeners_[type].push_back(listener);
-		}
-
-		inline void dispatch_all() noexcept
-		{
-			while (!queue_.empty()) {
-				auto &event = queue_.front();
-				for (auto const &listener : listeners_[event->type()]) {
-					listener(*event);
-				}
-				queue_.pop();
-			}
-		}
+		void listener(
+			std::function<void(base const &)> const listener) const noexcept;
 
 		private:
 
-		std::queue<std::unique_ptr<event const>> queue_;
-		std::map<type, std::vector<std::function<void(event const &)>>>
-			listeners_;
+		std::size_t const id_;
+
+		void dispatch(base const &event) const noexcept;
+
+		friend void dispatch() noexcept;
 	};
 } // namespace gecgelcem::founding::event
 

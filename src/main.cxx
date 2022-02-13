@@ -12,19 +12,21 @@
 
 using namespace gecgelcem::founding;
 
-static event::type const DEBUG_EVENT;
+static event::type const SECOND_EVENT;
 
-struct debug_event : event::base {
-	std::string message;
+struct second_event : event::base {
+	statistics ticks;
+	statistics frames;
 
-	debug_event(std::string &&message)
-		: message{std::move(message)}
+	second_event(statistics ticks, statistics frames)
+		: ticks{ticks}
+		, frames{frames}
 	{
 	}
 
 	event::type type() const noexcept override
 	{
-		return DEBUG_EVENT;
+		return SECOND_EVENT;
 	}
 };
 
@@ -32,9 +34,10 @@ int main()
 {
 	display::display const display{display::options{}};
 
-	DEBUG_EVENT.listener([](event::base const &raw_event) {
-		debug_event const &event = static_cast<debug_event const &>(raw_event);
-		std::cout << event.message << std::endl;
+	SECOND_EVENT.listener([](event::base const &base) {
+		second_event const &event = static_cast<second_event const &>(base);
+		std::cout << "Ticks:  " << event.ticks.rate()
+				  << "\nFrames: " << event.frames.rate() << std::endl;
 	});
 
 	auto const updater = [&display](engine &engine) {
@@ -56,11 +59,9 @@ int main()
 	};
 
 	auto const seconder = [](engine &engine) {
-		std::cout << "Ticks:  " << engine.tick_stats().rate()
-				  << "\nFrames: " << engine.frame_stats().rate() << std::endl;
-		std::stringstream stream;
-		stream << "Debug Message @" << engine.tick_stats().count();
-		event::queue(std::move(std::make_unique<debug_event>(stream.str())));
+		event::queue(std::move(std::make_unique<second_event>(
+			engine.tick_stats(),
+			engine.frame_stats())));
 	};
 
 	engine{20.0, updater, renderer, seconder};

@@ -28,23 +28,21 @@ namespace gecgelcem::founding
 				iterations = timer{};
 
 				while (ticks_waiting_ >= 1.0) {
-					profiler profiler{tick_counter_};
+					profiler profiler{ticks_};
 					updater(*this);
 					--ticks_waiting_;
 				}
 
 				if (rendering_) {
-					profiler profiler{frame_counter_};
+					profiler profiler{frames_};
 					renderer(*this);
 				}
 
 				if (seconds >= 1.0) {
-					seconds          = seconds + 1.0;
-					ticks_snapshot_  = tick_counter_;
-					frames_snapshot_ = frame_counter_;
-					tick_counter_.refresh();
-					frame_counter_.refresh();
+					seconds = seconds + 1.0;
 					seconder(*this);
+					ticks_.refresh();
+					frames_.refresh();
 				}
 			}
 		}
@@ -61,12 +59,12 @@ namespace gecgelcem::founding
 
 		constexpr statistics const &tick_stats() const noexcept
 		{
-			return ticks_snapshot_;
+			return ticks_;
 		}
 
 		constexpr statistics const &frame_stats() const noexcept
 		{
-			return frames_snapshot_;
+			return frames_;
 		}
 
 		private:
@@ -75,10 +73,8 @@ namespace gecgelcem::founding
 		bool   rendering_{true};
 		double ticks_waiting_{0.0};
 
-		statistics tick_counter_;
-		statistics frame_counter_;
-		statistics ticks_snapshot_;
-		statistics frames_snapshot_;
+		statistics ticks_;
+		statistics frames_;
 	};
 } // namespace gecgelcem::founding
 

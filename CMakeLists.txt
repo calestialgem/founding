@@ -15,6 +15,7 @@ src/timer.hxx
 src/profiler.hxx
 src/statistics.hxx
 src/engine.hxx
+src/event.hxx
 )
 
 # OpenGL

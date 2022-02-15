@@ -4,7 +4,7 @@
 #ifndef GECGELCEM_FOUNDING_TIMER_HXX
 #define GECGELCEM_FOUNDING_TIMER_HXX
 
-#include "GLFW/glfw3.h"
+#include "opengl.hxx"
 
 #include <compare>
 

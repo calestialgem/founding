@@ -4,11 +4,8 @@
 #ifndef GECGELCEM_FOUNDING_EVENTS_HXX
 #define GECGELCEM_FOUNDING_EVENTS_HXX
 
-#include <cstddef>
 #include <functional>
 #include <memory>
-#include <queue>
-#include <vector>
 
 namespace gecgelcem::founding::event
 {

@@ -5,10 +5,7 @@
 #include "engine.hxx"
 #include "event.hxx"
 
-#include <GL/gl.h>
 #include <iostream>
-#include <memory>
-#include <sstream>
 
 using namespace gecgelcem::founding;
 

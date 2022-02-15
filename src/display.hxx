@@ -4,11 +4,8 @@
 #ifndef GECGELCEM_FOUNDING_DISPLAY_HXX
 #define GECGELCEM_FOUNDING_DISPLAY_HXX
 
-#include "GLFW/glfw3.h"
+#include "opengl.hxx"
 
-#include <GL/gl.h>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 namespace gecgelcem::founding::display

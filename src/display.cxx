@@ -3,9 +3,8 @@
 
 #include "display.hxx"
 
-#include "GLFW/glfw3.h"
-
-#include <GL/gl.h>
+#include <sstream>
+#include <stdexcept>
 
 namespace gecgelcem::founding::display
 {
@@ -81,6 +80,9 @@ namespace gecgelcem::founding::display
 
 		set_callbacks();
 		glfwMakeContextCurrent(window_);
+		if (!gladLoadGL(&glfwGetProcAddress)) {
+			throw std::runtime_error{"Could not initialize GL context!"};
+		}
 		options_.set_context();
 	}
 

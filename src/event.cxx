@@ -3,7 +3,7 @@
 
 #include "event.hxx"
 
-#include <cstddef>
+#include <queue>
 
 namespace gecgelcem::founding::event
 {

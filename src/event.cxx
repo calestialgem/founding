@@ -30,7 +30,7 @@ namespace gecgelcem::founding::event
 		: id_{listeners.size()}
 	{
 		listeners.emplace_back(
-			std::move(std::vector<std::function<void(base const &)>>()));
+			std::vector<std::function<void(base const &)>>());
 	}
 
 	void type::listener(

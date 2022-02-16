@@ -19,6 +19,13 @@ src/event.hxx
 src/event.cxx
 )
 
+# Warnings
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /Wall)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL)

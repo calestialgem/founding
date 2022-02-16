@@ -98,9 +98,9 @@ int main()
 	};
 
 	auto const seconder = [](engine &engine) {
-		event::queue(std::move(std::make_unique<second_event>(
+		event::queue(std::make_unique<second_event>(
 			engine.tick_stats(),
-			engine.frame_stats())));
+			engine.frame_stats()));
 	};
 
 	engine{20.0, updater, renderer, seconder};

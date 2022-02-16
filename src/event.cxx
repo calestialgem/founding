@@ -3,6 +3,7 @@
 
 #include "event.hxx"
 
+#include <iostream>
 #include <queue>
 
 namespace gecgelcem::founding::event
@@ -16,11 +17,11 @@ namespace gecgelcem::founding::event
 		waiting.emplace(std::move(event));
 	}
 
-	void dispatch() noexcept
+	void dispatch(unsigned long long const tick) noexcept
 	{
 		while (!waiting.empty()) {
 			auto const &event = waiting.front();
-			event->type().dispatch(*event);
+			event->type().dispatch(*event, tick);
 			waiting.pop();
 		}
 	}
@@ -38,9 +39,14 @@ namespace gecgelcem::founding::event
 		listeners[id_].push_back(listener);
 	}
 
-	void type::dispatch(base const &event) const noexcept
+	void type::dispatch(base const &event, unsigned long long const tick)
+		const noexcept
 	{
-		for (auto const &listener : listeners[id_]) {
+		auto const &to = listeners[id_];
+		std::cout << "@" << tick << " dispatching ";
+		event.print(std::cout);
+		std::cout << " to " << to.size() << " listeners..." << std::endl;
+		for (auto const &listener : to) {
 			listener(event);
 		}
 	}

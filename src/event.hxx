@@ -6,6 +6,8 @@
 
 #include <functional>
 #include <memory>
+#include <ostream>
+#include <string>
 
 namespace gecgelcem::founding::event
 {
@@ -13,11 +15,13 @@ namespace gecgelcem::founding::event
 
 	struct base {
 		virtual type type() const noexcept = 0;
+
+		virtual void print(std::ostream &out) const noexcept = 0;
 	};
 
 	void queue(std::unique_ptr<base const> &&event) noexcept;
 
-	void dispatch() noexcept;
+	void dispatch(unsigned long long const tick) noexcept;
 
 	class type final
 	{
@@ -30,11 +34,12 @@ namespace gecgelcem::founding::event
 
 		private:
 
-		std::size_t const id_;
+		std::size_t id_;
 
-		void dispatch(base const &event) const noexcept;
+		void dispatch(base const &event, unsigned long long const tick)
+			const noexcept;
 
-		friend void dispatch() noexcept;
+		friend void dispatch(unsigned long long const tick) noexcept;
 	};
 } // namespace gecgelcem::founding::event
 

@@ -10,17 +10,32 @@
 
 namespace gecgelcem::founding
 {
+	class engine;
+
+	template<typename EngineConsumer>
+	concept engine_consumer =
+		requires(engine &engine, EngineConsumer const &consumer)
+	{
+		consumer(engine);
+	};
+
 	class engine final
 	{
 		public:
 
-		template<typename Updater, typename Renderer, typename Seconder>
+		template<
+			engine_consumer Initializer,
+			engine_consumer Updater,
+			engine_consumer Renderer,
+			engine_consumer Seconder>
 		inline engine(
-			double const    target_tick_rate,
-			Updater const  &updater,
-			Renderer const &renderer,
-			Seconder const &seconder) noexcept
+			double const       target_tick_rate,
+			Initializer const &initializer,
+			Updater const     &updater,
+			Renderer const    &renderer,
+			Seconder const    &seconder) noexcept
 		{
+			initializer(*this);
 			timer iterations;
 			timer seconds;
 			while (running_) {

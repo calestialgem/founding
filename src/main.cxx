@@ -4,14 +4,18 @@
 #include "display.hxx"
 #include "engine.hxx"
 #include "event.hxx"
+#include "spdlog/common.h"
+#include "spdlog/details/log_msg.h"
 
 #include <cstddef>
 #include <iostream>
 #include <memory>
 #include <spdlog/fmt/bundled/core.h>
+#include <spdlog/pattern_formatter.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
+#include <utility>
 
 using namespace gecgelcem::founding;
 
@@ -71,6 +75,36 @@ static void on_second_event(event::base const &base)
 	event::queue(std::make_unique<message_event>(builder.str()));
 }
 
+class tick_formatter_flag final : public spdlog::custom_flag_formatter
+{
+	public:
+
+	tick_formatter_flag(engine const &engine)
+		: engine(engine)
+	{
+	}
+
+	void format(
+		spdlog::details::log_msg const &,
+		std::tm const &,
+		spdlog::memory_buf_t &dest) override
+	{
+		auto builder = std::stringstream{};
+		builder << engine.tick_stats().count();
+		auto const text = builder.str();
+		dest.append(text.data(), text.data() + text.size());
+	}
+
+	std::unique_ptr<spdlog::custom_flag_formatter> clone() const override
+	{
+		return spdlog::details::make_unique<tick_formatter_flag>(engine);
+	}
+
+	private:
+
+	engine const &engine;
+};
+
 int main()
 {
 	display::display const display{display::options{}};
@@ -82,8 +116,15 @@ int main()
 
 	MESSAGE_EVENT.listener([](event::base const &base) {
 		message_event const &event = static_cast<message_event const &>(base);
-		spdlog::info("{}", event.message);
+		SPDLOG_INFO("{}", event.message);
 	});
+
+	auto const initilizer = [](engine &engine) {
+		auto formatter = std::make_unique<spdlog::pattern_formatter>();
+		formatter->add_flag<tick_formatter_flag>('*', engine)
+			.set_pattern("%C.%m.%d.%H.%M.%S @%* %s:%# > %^[%=8l]%$: %v");
+		spdlog::set_formatter(std::move(formatter));
+	};
 
 	auto const updater = [&display](engine &engine) {
 		display.update();
@@ -94,7 +135,7 @@ int main()
 		}
 	};
 
-	auto const renderer = [&display](engine &engine) {
+	auto const renderer = [&display](engine &) {
 		glClearColor(
 			display.is_focused(),
 			display.is_iconified(),
@@ -109,5 +150,5 @@ int main()
 			engine.frame_stats()));
 	};
 
-	engine{20.0, updater, renderer, seconder};
+	engine{20.0, initilizer, updater, renderer, seconder};
 }

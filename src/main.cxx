@@ -8,6 +8,7 @@
 #include "spdlog/details/log_msg.h"
 
 #include <cstddef>
+#include <glm/vec2.hpp>
 #include <iostream>
 #include <memory>
 #include <spdlog/fmt/bundled/core.h>
@@ -124,6 +125,11 @@ int main()
 		formatter->add_flag<tick_formatter_flag>('*', engine)
 			.set_pattern("%C.%m.%d.%H.%M.%S @%* %s:%# > %^[%=8l]%$: %v");
 		spdlog::set_formatter(std::move(formatter));
+
+		auto v1 = glm::vec2{0.1F, 0.2F};
+		auto v2 = v1 * 2.0F;
+		auto v3 = v2 - v1;
+		SPDLOG_INFO("v3: ({}, {})", v3.x, v3.y);
 	};
 
 	auto const updater = [&display](engine &engine) {

@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <ostream>
+#include <spdlog/fmt/bundled/core.h>
 #include <string>
 
 namespace gecgelcem::founding::event
@@ -16,7 +17,8 @@ namespace gecgelcem::founding::event
 	struct base {
 		virtual type type() const noexcept = 0;
 
-		virtual void print(std::ostream &out) const noexcept = 0;
+		virtual fmt::appender
+		format(fmt::format_context &ctx) const noexcept = 0;
 	};
 
 	void queue(std::unique_ptr<base const> &&event) noexcept;
@@ -42,5 +44,19 @@ namespace gecgelcem::founding::event
 		friend void dispatch(unsigned long long const tick) noexcept;
 	};
 } // namespace gecgelcem::founding::event
+
+template<>
+struct fmt::formatter<gecgelcem::founding::event::base> {
+	constexpr auto parse(format_parse_context &ctx)
+	{
+		return ctx.begin();
+	}
+
+	constexpr auto
+	format(gecgelcem::founding::event::base const &base, format_context &ctx)
+	{
+		return base.format(ctx);
+	}
+};
 
 #endif // GECGELCEM_FOUNDING_EVENTS_HXX

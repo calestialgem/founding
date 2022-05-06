@@ -41,3 +41,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 # GLAD
 add_subdirectory(glad)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
+
+# SPDLOG
+add_subdirectory(spdlog)
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)

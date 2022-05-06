@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <queue>
+#include <spdlog/spdlog.h>
 
 namespace gecgelcem::founding::event
 {
@@ -43,9 +44,11 @@ namespace gecgelcem::founding::event
 		const noexcept
 	{
 		auto const &to = listeners[id_];
-		std::cout << "@" << tick << " dispatching ";
-		event.print(std::cout);
-		std::cout << " to " << to.size() << " listeners..." << std::endl;
+		spdlog::debug(
+			"@{} dispatching {} to {} listeners...",
+			tick,
+			event,
+			to.size());
 		for (auto const &listener : to) {
 			listener(event);
 		}

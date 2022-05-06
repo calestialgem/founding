@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <iostream>
 #include <memory>
+#include <spdlog/fmt/bundled/core.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 
@@ -31,9 +33,13 @@ struct second_event : event::base {
 		return SECOND_EVENT;
 	}
 
-	void print(std::ostream &out) const noexcept override
+	fmt::appender format(fmt::format_context &ctx) const noexcept override
 	{
-		out << "Ticks: " << ticks.rate() << " Frames: " << frames.rate();
+		return fmt::format_to(
+			ctx.out(),
+			"Ticks: {} Frames: {}",
+			ticks.rate(),
+			frames.rate());
 	}
 };
 
@@ -50,9 +56,9 @@ struct message_event : event::base {
 		return MESSAGE_EVENT;
 	}
 
-	void print(std::ostream &out) const noexcept override
+	fmt::appender format(fmt::format_context &ctx) const noexcept override
 	{
-		out << message;
+		return fmt::format_to(ctx.out(), "{}", message);
 	}
 };
 
@@ -76,7 +82,7 @@ int main()
 
 	MESSAGE_EVENT.listener([](event::base const &base) {
 		message_event const &event = static_cast<message_event const &>(base);
-		std::cout << event.message << std::endl;
+		spdlog::info("{}", event.message);
 	});
 
 	auto const updater = [&display](engine &engine) {

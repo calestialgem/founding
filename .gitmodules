@@ -7,3 +7,6 @@
 [submodule "glad"]
 	path = glad
 	url = https://github.com/Waistax/glad.git
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/gabime/spdlog.git

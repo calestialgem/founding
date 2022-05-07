@@ -6,18 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project(founding)
-add_executable(${PROJECT_NAME}
-src/main.cxx
-src/display.hxx
-src/display.cxx
-src/accumulator.hxx
-src/timer.hxx
-src/profiler.hxx
-src/statistics.hxx
-src/engine.hxx
-src/event.hxx
-src/event.cxx
-)
+add_executable(${PROJECT_NAME} src/founding.cxx)
 
 # Warnings
 if(MSVC)

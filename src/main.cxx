@@ -4,13 +4,13 @@
 #include "display.hxx"
 #include "engine.hxx"
 #include "event.hxx"
-#include "spdlog/common.h"
-#include "spdlog/details/log_msg.h"
 
 #include <cstddef>
 #include <glm/vec2.hpp>
 #include <iostream>
 #include <memory>
+#include <spdlog/common.h>
+#include <spdlog/details/log_msg.h>
 #include <spdlog/fmt/bundled/core.h>
 #include <spdlog/pattern_formatter.h>
 #include <spdlog/spdlog.h>
